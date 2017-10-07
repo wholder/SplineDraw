@@ -1,5 +1,5 @@
 
-  //	SplineMovement testbed
+  //	SplineDraw testbed
   //  Ref: http://www.mvps.org/directx/articles/catmull/
   //  See also: http://www.cemyuksel.com/research/catmullrom_param/catmullrom.pdf   (other types)
 
@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 import javax.swing.*;
 
-  public class SplineMovement extends JFrame {
+  public class SplineDraw extends JFrame {
   private static final int      STEPS = 16;       // Interpolated points between recorded points
   private static final int      DIST = 64;        // Distance mouse must move to record another point
   private List<Point>           points = new ArrayList<>();
@@ -75,8 +75,8 @@ import javax.swing.*;
     }
   }
 
-  private SplineMovement () {
-    super("Catmull-Rom SplineMovement");
+  private SplineDraw () {
+    super("Catmull-Rom SplineDraw");
     setBackground(Color.white);
     addWindowListener(new Closer());
     addMouseListener(new MouseAdapter() {
@@ -222,6 +222,6 @@ import javax.swing.*;
   }
 
   public static void main (String[] args) throws Exception {
-    SwingUtilities.invokeLater(SplineMovement::new);
+    SwingUtilities.invokeLater(SplineDraw::new);
   }
 }
