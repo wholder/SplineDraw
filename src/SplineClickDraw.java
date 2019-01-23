@@ -99,7 +99,7 @@
         path = CatmullRomToBezier.convert(points.toArray(new Point[points.size()]), true);
       } else {
         Point[] pnts = points.toArray(new Point[points.size() + 1]);
-        // Duplicate last point so we can draw full path
+        // Duplicate last point so we can draw a curve through all points in the path
         pnts[pnts.length -1 ] = pnts[pnts.length - 2];
         path = CatmullRomToBezier.convert(pnts, false);
       }

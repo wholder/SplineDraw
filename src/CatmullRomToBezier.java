@@ -1,11 +1,20 @@
 import java.awt.*;
 import java.awt.geom.Path2D;
 
-  // Based on: https://advancedweb.hu/2014/10/28/plotting_charts_with_svg/
-  // See also: http://schepers.cc/getting-to-the-point
-  // See also: https://pomax.github.io/bezierinfo/
-
+/**
+ * Converts series of points defining a Catmull-Rom Spline into a Cubic Bezier
+ *
+ *    Based on: https://advancedweb.hu/2014/10/28/plotting_charts_with_svg/
+ *    See also: http://schepers.cc/getting-to-the-point
+ *    See also: https://pomax.github.io/bezierinfo/
+ */
 class CatmullRomToBezier {
+  /**
+   * Converts series of points defining a Catmull-Rom Spline into a Cubic Bezier
+   * @param points Array of 2D points
+   * @param closePath set true if generated Bezier path should be closed, else false
+   * @return Path2D.Double object with generated Berzier Curve as path
+   */
   static Path2D.Double convert (Point[] points, boolean closePath) {
     Path2D.Double path = new Path2D.Double();
     path.moveTo(points[0].x, points[0].y);
@@ -13,10 +22,10 @@ class CatmullRomToBezier {
     for (int ii = 0;  ii < end - 1; ii++) {
       Point p0, p1, p2, p3;
       if (closePath) {
-        int idx0 = wrap(ii - 1, points.length);
-        int idx1 = wrap(idx0 + 1, points.length);
-        int idx2 = wrap(idx1 + 1, points.length);
-        int idx3 = wrap(idx2 + 1, points.length);
+        int idx0 = Math.floorMod(ii - 1, points.length);
+        int idx1 = Math.floorMod(idx0 + 1, points.length);
+        int idx2 = Math.floorMod(idx1 + 1, points.length);
+        int idx3 = Math.floorMod(idx2 + 1, points.length);
         p0 = new Point(points[idx0].x, points[idx0].y);
         p1 = new Point(points[idx1].x, points[idx1].y);
         p2 = new Point(points[idx2].x, points[idx2].y);
@@ -46,13 +55,5 @@ class CatmullRomToBezier {
       path.closePath();
     }
     return path;
-  }
-
-  static int wrap (int idx, int len) {
-    if (idx < 0) {
-      return len + idx;
-    } else {
-      return idx % len;
-    }
   }
 }
