@@ -2,7 +2,7 @@
 
 # SplineDraw
 
-SplineDraw is a test program I wrote to explore converting Catmull-Rom plins to Bezier curves.  This could was a prototyle for similar code I later added to my [LaserCut](https://github.com/wholder/LaserCut) program as a way to draw and the laser cut freeform shapes.
+SplineDraw is a test program I wrote to explore converting Catmull-Rom plins to Bezier curves.  This project was a prototyle for similar code I later added to my [LaserCut](https://github.com/wholder/LaserCut) program as a way to draw and the laser cut freeform shapes.
 
 ## Credit and Thanks
 
