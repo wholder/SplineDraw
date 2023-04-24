@@ -1,5 +1,7 @@
 import java.awt.*;
-import java.awt.geom.Path2D;
+import java.awt.geom.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Converts series of points defining a Catmull-Rom Spline into a Cubic Bezier
@@ -11,45 +13,47 @@ import java.awt.geom.Path2D;
 class CatmullRomToBezier {
   /**
    * Converts series of points defining a Catmull-Rom Spline into a Cubic Bezier
-   * @param points Array of 2D points
+   * @param list List of Point2D.Float objects
    * @param closePath set true if generated Bezier path should be closed, else false
-   * @return Path2D.Double object with generated Berzier Curve as path
+   * @return Path2D.Float object with generated Berzier Curve as path
    */
-  static Path2D.Double convert (Point[] points, boolean closePath) {
-    Path2D.Double path = new Path2D.Double();
+  static Path2D.Float convert (List<Point2D.Float> list, boolean closePath) {
+    List<Point2D.Float> temp = new ArrayList<>(list);
+    if (!closePath) {
+      // If curve is not closed. duplicate last point to draw a curve through all points in the path
+      temp.add(temp.get(temp.size() - 1));
+    }
+    Point2D.Float[] points = temp.toArray(new Point2D.Float[list.size()]);
+    Path2D.Float path = new Path2D.Float();
     path.moveTo(points[0].x, points[0].y);
     int end = closePath ? points.length + 1 : points.length - 1;
     for (int ii = 0;  ii < end - 1; ii++) {
-      Point p0, p1, p2, p3;
+      Point2D.Float p0, p1, p2, p3;
       if (closePath) {
         int idx0 = Math.floorMod(ii - 1, points.length);
         int idx1 = Math.floorMod(idx0 + 1, points.length);
         int idx2 = Math.floorMod(idx1 + 1, points.length);
         int idx3 = Math.floorMod(idx2 + 1, points.length);
-        p0 = new Point(points[idx0].x, points[idx0].y);
-        p1 = new Point(points[idx1].x, points[idx1].y);
-        p2 = new Point(points[idx2].x, points[idx2].y);
-        p3 = new Point(points[idx3].x, points[idx3].y);
+        p0 = new Point2D.Float(points[idx0].x, points[idx0].y);
+        p1 = new Point2D.Float(points[idx1].x, points[idx1].y);
+        p2 = new Point2D.Float(points[idx2].x, points[idx2].y);
+        p3 = new Point2D.Float(points[idx3].x, points[idx3].y);
       } else {
-        p0 = new Point(points[Math.max(ii - 1, 0)].x,
-                       points[Math.max(ii - 1, 0)].y);
-        p1 = new Point(points[ii].x, points[ii].y);
-        p2 = new Point(points[ii + 1].x, points[ii + 1].y);
-        p3 = new Point(points[Math.min(ii + 2, points.length - 1)].x,
-                       points[Math.min(ii + 2, points.length - 1)].y);
+        p0 = new Point2D.Float(points[Math.max(ii - 1, 0)].x, points[Math.max(ii - 1, 0)].y);
+        p1 = new Point2D.Float(points[ii].x, points[ii].y);
+        p2 = new Point2D.Float(points[ii + 1].x, points[ii + 1].y);
+        p3 = new Point2D.Float(points[Math.min(ii + 2, points.length - 1)].x, points[Math.min(ii + 2, points.length - 1)].y);
       }
       // Catmull-Rom to Cubic Bezier conversion matrix
       //    0       1       0       0
       //  -1/6      1      1/6      0
       //    0      1/6      1     -1/6
       //    0       0       1       0
-      double x1 = (-p0.x + 6 * p1.x + p2.x) / 6;  // First control point
-      double y1 = (-p0.y + 6 * p1.y + p2.y) / 6;
-      double x2 = ( p1.x + 6 * p2.x - p3.x) / 6;  // Second control point
-      double y2 = ( p1.y + 6 * p2.y - p3.y) / 6;
-      double x3 = p2.x;                           // End point
-      double y3 = p2.y;
-      path.curveTo(x1, y1, x2, y2, x3, y3);
+      Point2D.Float control1 = new Point2D.Float((-p0.x + 6f * p1.x + p2.x) / 6f, (-p0.y + 6f * p1.y + p2.y) / 6f);
+      Point2D.Float control2 = new Point2D.Float(( p1.x + 6f * p2.x - p3.x) / 6f, ( p1.y + 6f * p2.y - p3.y) / 6f);
+      Point2D.Float control3 = new Point2D.Float(p2.x,  p2.y);
+      // Add curveTo segment to path
+      path.curveTo(control1.x, control1.y, control2.x, control2.y, control3.x, control3.y);
     }
     if (closePath) {
       path.closePath();
