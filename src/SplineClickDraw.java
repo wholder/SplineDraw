@@ -96,7 +96,7 @@ import java.util.List;
         System.exit(0);
       }
     });
-    setSize(800, 800);                                // Set size of window
+    setSize(600, 600);                                // Set size of window
     setLocationRelativeTo(null);                      // center window pn screen
     setVisible(true);
   }
